@@ -6,18 +6,18 @@ public class EmployeeMenu {
 
     public static void displayEmployeeMenu(BufferedReader stdIn, PrintWriter out, BufferedReader in) throws IOException {
         System.out.println("Employee Menu:");
-        System.out.println("1. View Next Day Recommendation");
-        System.out.println("2. Give Feedback for Today Menu");
+        System.out.println("1. Vote for Next Day Recommendation");
+        System.out.println("2. Give Feedback to Chef");
         System.out.println("3. Exit");
         System.out.print("Enter your choice: ");
         String choice = stdIn.readLine();
 
         switch (choice) {
             case "1":
-                // Implement view next day recommendation functionality
+                voteForRecommendation(stdIn, out, in);
                 break;
             case "2":
-                displayFeedbackMenu(stdIn, out, in);
+                // Add code for feedback to chef here
                 break;
             case "3":
                 System.exit(0);
@@ -27,26 +27,30 @@ public class EmployeeMenu {
         }
     }
 
-    private static void displayFeedbackMenu(BufferedReader stdIn, PrintWriter out, BufferedReader in) throws IOException {
-        System.out.println("Give Feedback for Today Menu:");
-        System.out.println("1. Breakfast");
-        System.out.println("2. Lunch");
-        System.out.println("3. Dinner");
-        System.out.print("Enter your choice: ");
-        String choice = stdIn.readLine();
+    private static void voteForRecommendation(BufferedReader stdIn, PrintWriter out, BufferedReader in) throws IOException {
+        out.println("VIEW_CHEF_RECOMMENDATIONS");
+        String response = in.readLine();
 
-        switch (choice) {
-            case "1":
-                // Implement give feedback for breakfast functionality
-                break;
-            case "2":
-                // Implement give feedback for lunch functionality
-                break;
-            case "3":
-                // Implement give feedback for dinner functionality
-                break;
-            default:
-                System.out.println("Invalid choice");
+        if (response != null && response.startsWith("VIEW_RECOMMENDATIONS_RESPONSE")) {
+            String[] parts = response.split(";");
+            System.out.println("Chef Recommendations:");
+            for (int i = 1; i < parts.length; i += 3) {
+                System.out.println("MenuId: " + parts[i] + ", Name: " + parts[i + 1] + ", VoteCount: " + parts[i + 2]);
+            }
+
+            System.out.print("Enter the MenuIds to vote for (comma separated): ");
+            String menuIds = stdIn.readLine();
+            out.println("VOTE_RECOMMENDATION_REQUEST;" + menuIds);
+
+            String voteResponse = in.readLine();
+            if (voteResponse != null && voteResponse.startsWith("VOTE_RECOMMENDATION_RESPONSE")) {
+                String[] voteParts = voteResponse.split(";");
+                if ("SUCCESS".equals(voteParts[1])) {
+                    System.out.println("Votes registered successfully.");
+                } else {
+                    System.out.println("Failed to register votes.");
+                }
+            }
         }
     }
 }

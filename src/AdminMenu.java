@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 public class AdminMenu {
 
     public static void displayAdminMenu(BufferedReader stdIn, PrintWriter out, BufferedReader in) throws IOException {
+        while(true){
         System.out.println("Admin Menu:");
         System.out.println("1. View Food Menu");
         System.out.println("2. Add Item in Food Menu");
@@ -34,6 +35,7 @@ public class AdminMenu {
                 break;
             default:
                 System.out.println("Invalid choice");
+           }
         }
     }
 }
