@@ -41,10 +41,11 @@ public class EmployeeMenu {
             for (int i = 1; i < parts.length; i += 3) {
                 System.out.println("MenuId: " + parts[i] + ", Name: " + parts[i + 1] + ", Score: " + parts[i + 2]);
             }
-
+            System.out.print("Enter your Employee Id: ");
+            String employeeId = stdIn.readLine();
             System.out.print("Enter the MenuIds to vote for (comma separated): ");
             String menuIds = stdIn.readLine();
-            out.println("VOTE_RECOMMENDATION_REQUEST;" + menuIds);
+            out.println("VOTE_RECOMMENDATION_REQUEST;" + menuIds + ";" + employeeId);
 
             String voteResponse = in.readLine();
             if (voteResponse != null && voteResponse.startsWith("VOTE_RECOMMENDATION_RESPONSE")) {
@@ -52,43 +53,44 @@ public class EmployeeMenu {
                 if ("SUCCESS".equals(voteParts[1])) {
                     System.out.println("Votes registered successfully.");
                 } else {
-                    System.out.println("Failed to register votes.");
+                    System.out.println("Failed to submit feedback : " + voteParts[2]);
                 }
             }
         }
     }
 
-    private static void giveFeedbackToChef(BufferedReader stdIn, PrintWriter out, BufferedReader in) throws IOException {
-        System.out.print("Enter your EmployeeId: ");
-        String employeeId = stdIn.readLine();
+        private static void giveFeedbackToChef (BufferedReader stdIn, PrintWriter out, BufferedReader in) throws
+        IOException {
+            System.out.print("Enter your EmployeeId: ");
+            String employeeId = stdIn.readLine();
 
-        System.out.print("Enter the MenuId to give feedback");
-        int menuId = Integer.parseInt(stdIn.readLine());
+            System.out.print("Enter the MenuId to give feedback: ");
+            int menuId = Integer.parseInt(stdIn.readLine());
 
-        System.out.print("Enter your comment: ");
-        String comment = stdIn.readLine();
+            System.out.print("Enter your comment: ");
+            String comment = stdIn.readLine();
 
-        System.out.print("Enter your rating: ");
-        int rating = Integer.parseInt(stdIn.readLine());
+            System.out.print("Enter your rating: ");
+            int rating = Integer.parseInt(stdIn.readLine());
 
-        Feedback feedbackDTO = new Feedback();
-        feedbackDTO.setEmployeeId(employeeId);
-        feedbackDTO.setMenuId(menuId);
-        feedbackDTO.setComment(comment);
-        feedbackDTO.setRating(rating);
+            Feedback feedbackDTO = new Feedback();
+            feedbackDTO.setEmployeeId(employeeId);
+            feedbackDTO.setMenuId(menuId);
+            feedbackDTO.setComment(comment);
+            feedbackDTO.setRating(rating);
 
-        Gson gson = new Gson();
-        String jsonFeedback = gson.toJson(feedbackDTO);
-        out.println("GIVE_FEEDBACK_REQUEST;" + jsonFeedback);
+            Gson gson = new Gson();
+            String jsonFeedback = gson.toJson(feedbackDTO);
+            out.println("GIVE_FEEDBACK_REQUEST;" + jsonFeedback);
 
-        String feedbackResponse = in.readLine();
-        if (feedbackResponse != null && feedbackResponse.startsWith("GIVE_FEEDBACK_RESPONSE")) {
-            String[] feedbackParts = feedbackResponse.split(";");
-            if ("SUCCESS".equals(feedbackParts[1])) {
-                System.out.println("Feedback submitted successfully.");
-            } else {
-                System.out.println("Failed to submit feedback.");
+            String feedbackResponse = in.readLine();
+            if (feedbackResponse != null && feedbackResponse.startsWith("GIVE_FEEDBACK_RESPONSE")) {
+                String[] feedbackParts = feedbackResponse.split(";");
+                if ("SUCCESS".equals(feedbackParts[1])) {
+                    System.out.println("Feedback submitted successfully.");
+                } else {
+                    System.out.println("Failed to submit feedback : " + feedbackParts[2]);
+                }
             }
         }
     }
-}
