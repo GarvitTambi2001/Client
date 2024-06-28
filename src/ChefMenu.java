@@ -22,7 +22,8 @@ public class ChefMenu {
                     System.out.println(viewResponse);
                     break;
                 case "2":
-                    out.println("VIEW_TOP_RECOMMENDATIONS");
+                    String numberOfRecommendation = promptString(stdIn, "Enter number of recommendation you want: ");
+                    out.println("VIEW_TOP_RECOMMENDATIONS;"+numberOfRecommendation);
                     String recommendationsResponse = in.readLine();
                     System.out.println(recommendationsResponse);
                     break;
@@ -41,6 +42,11 @@ public class ChefMenu {
                     System.out.println("Invalid choice");
             }
         }
+    }
+
+    private static String promptString(BufferedReader stdIn, String prompt) throws IOException {
+        System.out.print(prompt);
+        return stdIn.readLine();
     }
 
     private static void rollOutNextDayMenu(BufferedReader stdIn, PrintWriter out, BufferedReader in) throws IOException {
