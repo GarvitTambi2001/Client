@@ -1,3 +1,5 @@
+import com.google.gson.Gson;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -41,6 +43,7 @@ public class ClientCafeteria {
 
                 if ("SUCCESS".equals(status)) {
                     String role = parts[3];
+                    sendUserSessionRequest(out, employeeId, "login");
                     displayRoleMenu(role, stdIn, out, in);
                 } else {
                     System.out.println("Login failed");
@@ -48,6 +51,16 @@ public class ClientCafeteria {
                 }
             }
         }
+    }
+
+    public static void sendUserSessionRequest(PrintWriter out, String employeeId, String requestType) throws IOException {
+        UserSessionDTO sessionDTO = new UserSessionDTO();
+        sessionDTO.setEmployeeId(employeeId);
+        sessionDTO.setRequestType(requestType);
+
+        Gson gson = new Gson();
+        String jsonSession = gson.toJson(sessionDTO);
+        out.println("USER_SESSION_REQUEST;" + jsonSession);
     }
 
     private static void displayRoleMenu(String role, BufferedReader stdIn, PrintWriter out, BufferedReader in) throws IOException {
