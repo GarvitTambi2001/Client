@@ -5,7 +5,8 @@ import java.io.PrintWriter;
 public class AdminMenu {
 
     public static void displayAdminMenu(BufferedReader stdIn, PrintWriter out, BufferedReader in) throws IOException {
-        while(true){
+        String choice = "";
+        while(!choice.equals("5")){
         System.out.println("Admin Menu:");
         System.out.println("1. View Food Menu");
         System.out.println("2. Add Item in Food Menu");
@@ -13,7 +14,7 @@ public class AdminMenu {
         System.out.println("4. Delete Item in Food Menu");
         System.out.println("5. Exit");
         System.out.print("Enter your choice: ");
-        String choice = stdIn.readLine();
+        choice = stdIn.readLine();
 
         switch (choice) {
             case "1":
@@ -31,7 +32,9 @@ public class AdminMenu {
                 MenuManager.deleteMenu(stdIn, out, in);
                 break;
             case "5":
-                System.exit(0);
+                System.out.print("Enter your Employee Id: ");
+                String employeeId = stdIn.readLine();
+                ClientCafeteria.sendUserSessionRequest(out, employeeId, "logout");
                 break;
             default:
                 System.out.println("Invalid choice");

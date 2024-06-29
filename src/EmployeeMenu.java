@@ -8,11 +8,12 @@ public class EmployeeMenu {
 
     public static void displayEmployeeMenu(BufferedReader stdIn, PrintWriter out, BufferedReader in) throws IOException {
         String choice = "";
-        while(!choice.equals("3")){
+        while(!choice.equals("4")){
             System.out.println("Employee Menu:");
             System.out.println("1. Vote for Next Day Recommendation");
             System.out.println("2. Give Feedback to Chef");
-            System.out.println("3. Exit");
+            System.out.println("3. View Notifications");
+            System.out.println("4. Exit");
             System.out.print("Enter your choice: ");
             choice = stdIn.readLine();
 
@@ -24,6 +25,9 @@ public class EmployeeMenu {
                     giveFeedbackToChef(stdIn, out, in);
                     break;
                 case "3":
+                    viewNotifications(out, in);
+                    break;
+                case "4":
                     System.out.print("Enter your Employee Id: ");
                     String employeeId = stdIn.readLine();
                     ClientCafeteria.sendUserSessionRequest(out, employeeId, "logout");
@@ -96,4 +100,17 @@ public class EmployeeMenu {
                 }
             }
         }
+
+    private static void viewNotifications(PrintWriter out, BufferedReader in) throws IOException {
+        out.println("VIEW_NOTIFICATIONS_REQUEST");
+
+        String response = in.readLine();
+        if (response != null && response.startsWith("VIEW_NOTIFICATIONS_RESPONSE")) {
+            String[] parts = response.split(";");
+            System.out.println("Today's Notifications:");
+            for (int i = 1; i < parts.length; i++) {
+                System.out.println(parts[i]);
+            }
+        }
+    }
     }
