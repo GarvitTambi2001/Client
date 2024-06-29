@@ -7,13 +7,14 @@ import java.io.PrintWriter;
 public class EmployeeMenu {
 
     public static void displayEmployeeMenu(BufferedReader stdIn, PrintWriter out, BufferedReader in) throws IOException {
-        while(true){
+        String choice = "";
+        while(!choice.equals("3")){
             System.out.println("Employee Menu:");
             System.out.println("1. Vote for Next Day Recommendation");
             System.out.println("2. Give Feedback to Chef");
             System.out.println("3. Exit");
             System.out.print("Enter your choice: ");
-            String choice = stdIn.readLine();
+            choice = stdIn.readLine();
 
             switch (choice) {
                 case "1":
@@ -23,7 +24,9 @@ public class EmployeeMenu {
                     giveFeedbackToChef(stdIn, out, in);
                     break;
                 case "3":
-                    System.exit(0);
+                    System.out.print("Enter your Employee Id: ");
+                    String employeeId = stdIn.readLine();
+                    ClientCafeteria.sendUserSessionRequest(out, employeeId, "logout");
                     break;
                 default:
                     System.out.println("Invalid choice");
@@ -38,8 +41,8 @@ public class EmployeeMenu {
         if (response != null && response.startsWith("VIEW_RECOMMENDATIONS_RESPONSE")) {
             String[] parts = response.split(";");
             System.out.println("Chef Recommendations:");
-            for (int i = 1; i < parts.length; i += 3) {
-                System.out.println("MenuId: " + parts[i] + ", Name: " + parts[i + 1] + ", Score: " + parts[i + 2]);
+            for (int i = 1; i < parts.length; i++) {
+                System.out.println(parts[i]);
             }
             System.out.print("Enter your Employee Id: ");
             String employeeId = stdIn.readLine();
