@@ -5,7 +5,8 @@ import java.io.PrintWriter;
 public class ChefMenu {
 
     public static void displayChefMenu(BufferedReader stdIn, PrintWriter out, BufferedReader in) throws IOException {
-        while (true) {
+        String choice = "";
+        while (!choice.equals("5")) {
             System.out.println("Chef Menu:");
             System.out.println("1. View Food Menu");
             System.out.println("2. View Top Recommendations");
@@ -13,7 +14,7 @@ public class ChefMenu {
             System.out.println("4. View Voted Report");
             System.out.println("5. Exit");
             System.out.print("Enter your choice: ");
-            String choice = stdIn.readLine();
+            choice = stdIn.readLine();
 
             switch (choice) {
                 case "1":
@@ -36,7 +37,9 @@ public class ChefMenu {
                     System.out.println(votedReportResponse);
                     break;
                 case "5":
-                    System.exit(0);
+                    System.out.print("Enter your Employee Id: ");
+                    String employeeId = stdIn.readLine();
+                    ClientCafeteria.sendUserSessionRequest(out, employeeId, "logout");
                     break;
                 default:
                     System.out.println("Invalid choice");
