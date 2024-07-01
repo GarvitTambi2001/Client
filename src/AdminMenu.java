@@ -1,44 +1,63 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AdminMenu {
 
-    public static void displayAdminMenu(BufferedReader stdIn, PrintWriter out, BufferedReader in) throws IOException {
+    private final PrintWriter out;
+    private final BufferedReader in;
+    private final BufferedReader stdIn;
+
+    public AdminMenu(PrintWriter out, BufferedReader in, BufferedReader stdIn) {
+        this.out = out;
+        this.in = in;
+        this.stdIn = stdIn;
+    }
+
+    public void displayAdminMenu() throws IOException {
+        Map<String, MenuCommand> commands = initializeCommands();
+
         String choice = "";
-        while(!choice.equals("5")){
+        while (!choice.equals("6")) {
+            printMenu();
+            choice = stdIn.readLine();
+
+            if (commands.containsKey(choice)) {
+                commands.get(choice).execute();
+            } else if ("6".equals(choice)) {
+                handleLogout();
+            } else {
+                System.out.println("Invalid choice");
+            }
+        }
+    }
+
+    private void printMenu() {
         System.out.println("Admin Menu:");
         System.out.println("1. View Food Menu");
         System.out.println("2. Add Item in Food Menu");
         System.out.println("3. Update Item in Food Menu");
         System.out.println("4. Delete Item in Food Menu");
-        System.out.println("5. Exit");
+        System.out.println("5. Discard Menu Item List");
+        System.out.println("6. Exit");
         System.out.print("Enter your choice: ");
-        choice = stdIn.readLine();
+    }
 
-        switch (choice) {
-            case "1":
-                out.println("VIEW_MENU_REQUEST");
-                String viewResponse = in.readLine();
-                System.out.println(viewResponse);
-                break;
-            case "2":
-                MenuManager.addMenu(stdIn, out, in);
-                break;
-            case "3":
-                MenuManager.updateMenu(stdIn, out, in);
-                break;
-            case "4":
-                MenuManager.deleteMenu(stdIn, out, in);
-                break;
-            case "5":
-                System.out.print("Enter your Employee Id: ");
-                String employeeId = stdIn.readLine();
-                ClientCafeteria.sendUserSessionRequest(out, employeeId, "logout");
-                break;
-            default:
-                System.out.println("Invalid choice");
-           }
-        }
+    private Map<String, MenuCommand> initializeCommands() {
+        Map<String, MenuCommand> commands = new HashMap<>();
+        commands.put("1", new ViewMenuCommand(out, in));
+        commands.put("2", new AddMenuCommand(stdIn, out, in));
+        commands.put("3", new UpdateMenuCommand(stdIn, out, in));
+        commands.put("4", new DeleteMenuCommand(stdIn, out, in));
+        commands.put("5", new DiscardMenuCommand(out, in, stdIn,"admin"));
+        return commands;
+    }
+
+    private void handleLogout() throws IOException {
+        System.out.print("Enter your Employee Id: ");
+        String employeeId = stdIn.readLine();
+        ClientCafeteria.sendUserSessionRequest(employeeId, "logout");
     }
 }

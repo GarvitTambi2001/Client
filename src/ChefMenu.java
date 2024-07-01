@@ -1,70 +1,67 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ChefMenu {
 
-    public static void displayChefMenu(BufferedReader stdIn, PrintWriter out, BufferedReader in) throws IOException {
+    private final PrintWriter out;
+    private final BufferedReader in;
+    private final BufferedReader stdIn;
+
+    public ChefMenu(PrintWriter out, BufferedReader in, BufferedReader stdIn) {
+        this.out = out;
+        this.in = in;
+        this.stdIn = stdIn;
+    }
+
+    public void displayChefMenu() throws IOException {
+        Map<String, MenuCommand> commands = initializeCommands();
+
         String choice = "";
-        while (!choice.equals("5")) {
-            System.out.println("Chef Menu:");
-            System.out.println("1. View Food Menu");
-            System.out.println("2. View Top Recommendations");
-            System.out.println("3. Roll Out Next Day Menu");
-            System.out.println("4. View Voted Report");
-            System.out.println("5. Exit");
-            System.out.print("Enter your choice: ");
+        while (!choice.equals("6")) {
+            printMenu();
             choice = stdIn.readLine();
 
-            switch (choice) {
-                case "1":
-                    out.println("VIEW_MENU_REQUEST");
-                    String viewResponse = in.readLine();
-                    System.out.println(viewResponse);
-                    break;
-                case "2":
-                    String numberOfRecommendation = promptString(stdIn, "Enter number of recommendation you want: ");
-                    out.println("VIEW_TOP_RECOMMENDATIONS;"+numberOfRecommendation);
-                    String recommendationsResponse = in.readLine();
-                    System.out.println(recommendationsResponse);
-                    break;
-                case "3":
-                    rollOutNextDayMenu(stdIn, out, in);
-                    break;
-                case "4":
-                    out.println("VIEW_VOTED_REPORT");
-                    String votedReportResponse = in.readLine();
-                    System.out.println(votedReportResponse);
-                    break;
-                case "5":
-                    System.out.print("Enter your Employee Id: ");
-                    String employeeId = stdIn.readLine();
-                    ClientCafeteria.sendUserSessionRequest(out, employeeId, "logout");
-                    break;
-                default:
-                    System.out.println("Invalid choice");
+            if (commands.containsKey(choice)) {
+                commands.get(choice).execute();
+            } else if ("6".equals(choice)) {
+                handleLogout();
+            } else {
+                System.out.println("Invalid choice");
             }
         }
     }
 
-    private static String promptString(BufferedReader stdIn, String prompt) throws IOException {
+    private void printMenu() {
+        System.out.println("Chef Menu:");
+        System.out.println("1. View Food Menu");
+        System.out.println("2. View Top Recommendations");
+        System.out.println("3. Roll Out Next Day Menu");
+        System.out.println("4. View Voted Report");
+        System.out.println("5. Discard Menu Item List");
+        System.out.println("6. Exit");
+        System.out.print("Enter your choice: ");
+    }
+
+    private Map<String, MenuCommand> initializeCommands() {
+        Map<String, MenuCommand> commands = new HashMap<>();
+        commands.put("1", new ViewMenuCommand(out, in));
+        commands.put("2", new ViewTopRecommendationsCommand(stdIn, out, in));
+        commands.put("3", new RollOutNextDayMenuCommand(stdIn, out, in));
+        commands.put("4", new ViewVotedReportCommand(out, in));
+        commands.put("5", new DiscardMenuCommand(out, in, stdIn,"chef"));
+        return commands;
+    }
+
+    private void handleLogout() throws IOException {
+        String employeeId = promptString("Enter your Employee Id: ");
+        ClientCafeteria.sendUserSessionRequest(employeeId, "logout");
+    }
+
+    private String promptString(String prompt) throws IOException {
         System.out.print(prompt);
         return stdIn.readLine();
-    }
-
-    private static void rollOutNextDayMenu(BufferedReader stdIn, PrintWriter out, BufferedReader in) throws IOException {
-        System.out.print("Enter the MenuIds for the next day (comma separated): ");
-        String menuIds = stdIn.readLine();
-        out.println("ROLLOUT_NEXT_DAY_MENU_REQUEST;" + menuIds);
-
-        String response = in.readLine();
-        if (response != null && response.startsWith("ROLLOUT_NEXT_DAY_MENU_RESPONSE")) {
-            String[] parts = response.split(";");
-            if ("SUCCESS".equals(parts[1])) {
-                System.out.println("Next day's menu rolled out successfully.");
-            } else {
-                System.out.println("Failed to roll out next day's menu.");
-            }
-        }
     }
 }
