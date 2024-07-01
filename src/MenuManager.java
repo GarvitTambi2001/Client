@@ -21,8 +21,10 @@ public class MenuManager {
             String json = gson.toJson(menu);
             out.println(Constants.ADD_MENU_REQUEST + json);
             System.out.println(in.readLine());
-        }catch(InputMismatchException error){
+        }catch(IllegalArgumentException | InputMismatchException error){
             System.err.println("Input is invalid. Please Try again");
+        }catch(Exception error){
+            System.err.println(error.getMessage());
         }
     }
 
@@ -39,8 +41,10 @@ public class MenuManager {
             String json = gson.toJson(menu);
             out.println(Constants.UPDATE_MENU_REQUEST + json);
             System.out.println(in.readLine());
-        }catch(InputMismatchException error){
+        }catch(IllegalArgumentException | InputMismatchException error){
             System.err.println("Input is invalid. Please Try again");
+        }catch(Exception error){
+            System.err.println(error.getMessage());
         }
     }
 
@@ -50,8 +54,10 @@ public class MenuManager {
             String menuId = promptString(stdIn, "Enter Menu ID: ");
             out.println(Constants.DELETE_MENU_REQUEST + menuId);
             System.out.println(in.readLine());
-        }catch(InputMismatchException error){
+        }catch(IllegalArgumentException | InputMismatchException error){
             System.err.println("Input is invalid. Please Try again");
+        }catch(Exception error){
+            System.err.println(error.getMessage());
         }
     }
 
