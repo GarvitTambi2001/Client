@@ -1,116 +1,65 @@
-import com.google.gson.Gson;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 public class EmployeeMenu {
 
-    public static void displayEmployeeMenu(BufferedReader stdIn, PrintWriter out, BufferedReader in) throws IOException {
+    private final PrintWriter out;
+    private final BufferedReader in;
+    private final BufferedReader stdIn;
+
+    public EmployeeMenu(PrintWriter out, BufferedReader in, BufferedReader stdIn) {
+        this.out = out;
+        this.in = in;
+        this.stdIn = stdIn;
+    }
+
+    public void displayEmployeeMenu() throws IOException {
+        Map<String, MenuCommand> commands = initializeCommands();
+
         String choice = "";
-        while(!choice.equals("4")){
-            System.out.println("Employee Menu:");
-            System.out.println("1. Vote for Next Day Recommendation");
-            System.out.println("2. Give Feedback to Chef");
-            System.out.println("3. View Notifications");
-            System.out.println("4. Exit");
-            System.out.print("Enter your choice: ");
+        while (!choice.equals("5")) {
+            printMenu();
             choice = stdIn.readLine();
 
-            switch (choice) {
-                case "1":
-                    voteForRecommendation(stdIn, out, in);
-                    break;
-                case "2":
-                    giveFeedbackToChef(stdIn, out, in);
-                    break;
-                case "3":
-                    viewNotifications(out, in);
-                    break;
-                case "4":
-                    System.out.print("Enter your Employee Id: ");
-                    String employeeId = stdIn.readLine();
-                    ClientCafeteria.sendUserSessionRequest(out, employeeId, "logout");
-                    break;
-                default:
-                    System.out.println("Invalid choice");
+            if (commands.containsKey(choice)) {
+                commands.get(choice).execute();
+            } else if ("5".equals(choice)) {
+                handleLogout();
+            } else {
+                System.out.println("Invalid choice");
             }
         }
     }
 
-    private static void voteForRecommendation(BufferedReader stdIn, PrintWriter out, BufferedReader in) throws IOException {
-        out.println("VIEW_CHEF_RECOMMENDATIONS");
-        String response = in.readLine();
-
-        if (response != null && response.startsWith("VIEW_RECOMMENDATIONS_RESPONSE")) {
-            String[] parts = response.split(";");
-            System.out.println("Chef Recommendations:");
-            for (int i = 1; i < parts.length; i++) {
-                System.out.println(parts[i]);
-            }
-            System.out.print("Enter your Employee Id: ");
-            String employeeId = stdIn.readLine();
-            System.out.print("Enter the MenuIds to vote for (comma separated): ");
-            String menuIds = stdIn.readLine();
-            out.println("VOTE_RECOMMENDATION_REQUEST;" + menuIds + ";" + employeeId);
-
-            String voteResponse = in.readLine();
-            if (voteResponse != null && voteResponse.startsWith("VOTE_RECOMMENDATION_RESPONSE")) {
-                String[] voteParts = voteResponse.split(";");
-                if ("SUCCESS".equals(voteParts[1])) {
-                    System.out.println("Votes registered successfully.");
-                } else {
-                    System.out.println("Failed to submit feedback : " + voteParts[2]);
-                }
-            }
-        }
+    private void printMenu() {
+        System.out.println("Employee Menu:");
+        System.out.println("1. Vote for Next Day Recommendation");
+        System.out.println("2. Give Feedback to Chef");
+        System.out.println("3. View Notifications");
+        System.out.println("4. Give Feedback for Discarded Items");
+        System.out.println("5. Exit");
+        System.out.print("Enter your choice: ");
     }
 
-        private static void giveFeedbackToChef (BufferedReader stdIn, PrintWriter out, BufferedReader in) throws
-        IOException {
-            System.out.print("Enter your EmployeeId: ");
-            String employeeId = stdIn.readLine();
-
-            System.out.print("Enter the MenuId to give feedback: ");
-            int menuId = Integer.parseInt(stdIn.readLine());
-
-            System.out.print("Enter your comment: ");
-            String comment = stdIn.readLine();
-
-            System.out.print("Enter your rating: ");
-            int rating = Integer.parseInt(stdIn.readLine());
-
-            Feedback feedbackDTO = new Feedback();
-            feedbackDTO.setEmployeeId(employeeId);
-            feedbackDTO.setMenuId(menuId);
-            feedbackDTO.setComment(comment);
-            feedbackDTO.setRating(rating);
-
-            Gson gson = new Gson();
-            String jsonFeedback = gson.toJson(feedbackDTO);
-            out.println("GIVE_FEEDBACK_REQUEST;" + jsonFeedback);
-
-            String feedbackResponse = in.readLine();
-            if (feedbackResponse != null && feedbackResponse.startsWith("GIVE_FEEDBACK_RESPONSE")) {
-                String[] feedbackParts = feedbackResponse.split(";");
-                if ("SUCCESS".equals(feedbackParts[1])) {
-                    System.out.println("Feedback submitted successfully.");
-                } else {
-                    System.out.println("Failed to submit feedback : " + feedbackParts[2]);
-                }
-            }
-        }
-
-    private static void viewNotifications(PrintWriter out, BufferedReader in) throws IOException {
-        out.println("VIEW_NOTIFICATIONS_REQUEST");
-
-        String response = in.readLine();
-        if (response != null && response.startsWith("VIEW_NOTIFICATIONS_RESPONSE")) {
-            String[] parts = response.split(";");
-            System.out.println("Today's Notifications:");
-            for (int i = 1; i < parts.length; i++) {
-                System.out.println(parts[i]);
-            }
-        }
+    private Map<String, MenuCommand> initializeCommands() {
+        Map<String, MenuCommand> commands = new HashMap<>();
+        commands.put("1", new VoteForRecommendationCommand(stdIn, out, in));
+        commands.put("2", new GiveFeedbackToChefCommand(stdIn, out, in));
+        commands.put("3", new ViewNotificationsCommand(out, in));
+        commands.put("4", new DiscardMenuCommand(out, in, stdIn,"employee"));
+        return commands;
     }
+
+    private void handleLogout() throws IOException {
+        String employeeId = promptString("Enter your Employee Id: ");
+        ClientCafeteria.sendUserSessionRequest(employeeId, "logout");
     }
+
+    private String promptString(String prompt) throws IOException {
+        System.out.print(prompt);
+        return stdIn.readLine();
+    }
+}

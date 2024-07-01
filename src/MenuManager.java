@@ -19,7 +19,7 @@ public class MenuManager {
 
             Gson gson = new Gson();
             String json = gson.toJson(menu);
-            out.println("ADD_MENU_REQUEST;" + json);
+            out.println(Constants.ADD_MENU_REQUEST + json);
             System.out.println(in.readLine());
         }catch(InputMismatchException error){
             System.err.println("Input is invalid. Please Try again");
@@ -37,7 +37,7 @@ public class MenuManager {
 
             Gson gson = new Gson();
             String json = gson.toJson(menu);
-            out.println("UPDATE_MENU_REQUEST;" + json);
+            out.println(Constants.UPDATE_MENU_REQUEST + json);
             System.out.println(in.readLine());
         }catch(InputMismatchException error){
             System.err.println("Input is invalid. Please Try again");
@@ -48,7 +48,7 @@ public class MenuManager {
     public static void deleteMenu(BufferedReader stdIn, PrintWriter out, BufferedReader in) throws IOException {
         try {
             String menuId = promptString(stdIn, "Enter Menu ID: ");
-            out.println("DELETE_MENU_REQUEST;" + menuId);
+            out.println(Constants.DELETE_MENU_REQUEST + menuId);
             System.out.println(in.readLine());
         }catch(InputMismatchException error){
             System.err.println("Input is invalid. Please Try again");
