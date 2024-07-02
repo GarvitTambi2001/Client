@@ -6,11 +6,13 @@ class VoteForRecommendationCommand implements MenuCommand {
     private final BufferedReader stdIn;
     private final PrintWriter out;
     private final BufferedReader in;
+    private final String employeeId;
 
-    public VoteForRecommendationCommand(BufferedReader stdIn, PrintWriter out, BufferedReader in) {
+    public VoteForRecommendationCommand(BufferedReader stdIn, PrintWriter out, BufferedReader in, String employeeId) {
         this.stdIn = stdIn;
         this.out = out;
         this.in = in;
+        this.employeeId = employeeId;
     }
 
     @Override
@@ -29,7 +31,6 @@ class VoteForRecommendationCommand implements MenuCommand {
         for (int i = 1; i < parts.length; i++) {
             System.out.println(parts[i]);
         }
-        String employeeId = promptString("Enter your Employee Id: ");
         String menuIds = promptString("Enter the MenuIds to vote for (comma separated): ");
         out.println(Constants.VOTE_RECOMMENDATION_REQUEST + menuIds + ";" + employeeId);
 

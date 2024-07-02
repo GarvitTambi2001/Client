@@ -10,10 +10,13 @@ public class AdminMenu {
     private final BufferedReader in;
     private final BufferedReader stdIn;
 
-    public AdminMenu(PrintWriter out, BufferedReader in, BufferedReader stdIn) {
+    private final String employeeId;
+
+    public AdminMenu(PrintWriter out, BufferedReader in, BufferedReader stdIn, String employeeId) {
         this.out = out;
         this.in = in;
         this.stdIn = stdIn;
+        this.employeeId = employeeId;
     }
 
     public void displayAdminMenu() throws IOException {
@@ -55,9 +58,7 @@ public class AdminMenu {
         return commands;
     }
 
-    private void handleLogout() throws IOException {
-        System.out.print("Enter your Employee Id: ");
-        String employeeId = stdIn.readLine();
+    private void handleLogout(){
         ClientCafeteria.sendUserSessionRequest(employeeId, "logout");
     }
 }

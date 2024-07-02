@@ -10,10 +10,13 @@ public class EmployeeMenu {
     private final BufferedReader in;
     private final BufferedReader stdIn;
 
-    public EmployeeMenu(PrintWriter out, BufferedReader in, BufferedReader stdIn) {
+    private final String employeeId;
+
+    public EmployeeMenu(PrintWriter out, BufferedReader in, BufferedReader stdIn, String employeeId) {
         this.out = out;
         this.in = in;
         this.stdIn = stdIn;
+        this.employeeId = employeeId;
     }
 
     public void displayEmployeeMenu() throws IOException {
@@ -46,15 +49,14 @@ public class EmployeeMenu {
 
     private Map<String, MenuCommand> initializeCommands() {
         Map<String, MenuCommand> commands = new HashMap<>();
-        commands.put("1", new VoteForRecommendationCommand(stdIn, out, in));
-        commands.put("2", new GiveFeedbackToChefCommand(stdIn, out, in));
+        commands.put("1", new VoteForRecommendationCommand(stdIn, out, in,employeeId));
+        commands.put("2", new GiveFeedbackToChefCommand(stdIn, out, in,employeeId));
         commands.put("3", new ViewNotificationsCommand(out, in));
         commands.put("4", new DiscardMenuCommand(out, in, stdIn,"employee"));
         return commands;
     }
 
-    private void handleLogout() throws IOException {
-        String employeeId = promptString("Enter your Employee Id: ");
+    private void handleLogout(){
         ClientCafeteria.sendUserSessionRequest(employeeId, "logout");
     }
 
