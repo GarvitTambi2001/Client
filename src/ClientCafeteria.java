@@ -60,8 +60,6 @@ public class ClientCafeteria {
                 String role = parts[3];
                 sendUserSessionRequest(employeeId, "login");
                 executeRoleMenuCommand(role);
-            } else {
-                System.err.println(Constants.ERROR_PREFIX + "Invalid credentials. Login failed.");
             }
         } else {
             System.err.println(Constants.ERROR_PREFIX + "Unexpected response from server: " + response);
