@@ -9,15 +9,17 @@ class GiveFeedbackToChefCommand implements MenuCommand {
     private final PrintWriter out;
     private final BufferedReader in;
 
-    public GiveFeedbackToChefCommand(BufferedReader stdIn, PrintWriter out, BufferedReader in) {
+    private final String employeeId;
+
+    public GiveFeedbackToChefCommand(BufferedReader stdIn, PrintWriter out, BufferedReader in, String employeeId) {
         this.stdIn = stdIn;
         this.out = out;
         this.in = in;
+        this.employeeId = employeeId;
     }
 
     @Override
     public void execute() throws IOException {
-        String employeeId = promptString("Enter your EmployeeId: ");
         int menuId = Integer.parseInt(promptString("Enter the MenuId to give feedback: "));
         String comment = promptString("Enter your comment: ");
         int rating = Integer.parseInt(promptString("Enter your rating: "));

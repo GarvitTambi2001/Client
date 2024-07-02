@@ -59,7 +59,7 @@ public class ClientCafeteria {
             if (Constants.SUCCESS.equals(status)) {
                 String role = parts[3];
                 sendUserSessionRequest(employeeId, "login");
-                executeRoleMenuCommand(role);
+                executeRoleMenuCommand(employeeId,role);
             }
         } else {
             System.err.println(Constants.ERROR_PREFIX + "Unexpected response from server: " + response);
@@ -75,9 +75,9 @@ public class ClientCafeteria {
         out.println(Constants.USER_SESSION_REQUEST + jsonSession);
     }
 
-    private static void executeRoleMenuCommand(String role) {
+    private static void executeRoleMenuCommand(String employeeId, String role) {
         try {
-            RoleMenuCommandFactory.getRoleMenuCommand(role).execute(stdIn,out,in);
+            RoleMenuCommandFactory.getRoleMenuCommand(role).execute(stdIn,out,in,employeeId);
         } catch (IllegalArgumentException e) {
             System.err.println(Constants.ERROR_PREFIX + e.getMessage());
         } catch (IOException e) {

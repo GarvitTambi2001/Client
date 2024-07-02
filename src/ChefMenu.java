@@ -9,11 +9,13 @@ public class ChefMenu {
     private final PrintWriter out;
     private final BufferedReader in;
     private final BufferedReader stdIn;
+    private final String employeeId;
 
-    public ChefMenu(PrintWriter out, BufferedReader in, BufferedReader stdIn) {
+    public ChefMenu(PrintWriter out, BufferedReader in, BufferedReader stdIn, String employeeId) {
         this.out = out;
         this.in = in;
         this.stdIn = stdIn;
+        this.employeeId = employeeId;
     }
 
     public void displayChefMenu() throws IOException {
@@ -55,8 +57,7 @@ public class ChefMenu {
         return commands;
     }
 
-    private void handleLogout() throws IOException {
-        String employeeId = promptString("Enter your Employee Id: ");
+    private void handleLogout(){
         ClientCafeteria.sendUserSessionRequest(employeeId, "logout");
     }
 

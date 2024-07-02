@@ -5,8 +5,8 @@ import java.io.PrintWriter;
 
 public class EmployeeMenuCommand implements RoleMenuCommand {
     @Override
-    public void execute(BufferedReader stdIn,PrintWriter out, BufferedReader in) throws IOException {
-        EmployeeMenu employeeMenu = new EmployeeMenu(out, in, stdIn);
+    public void execute(BufferedReader stdIn,PrintWriter out, BufferedReader in, String employeeId) throws IOException {
+        EmployeeMenu employeeMenu = new EmployeeMenu(out, in, stdIn,employeeId);
         employeeMenu.displayEmployeeMenu();
     }
 }
