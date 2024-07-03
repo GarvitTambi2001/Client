@@ -1,6 +1,11 @@
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.Type;
+import java.util.List;
 
 class ViewTopRecommendationsCommand implements MenuCommand {
     private final BufferedReader stdIn;
@@ -18,7 +23,25 @@ class ViewTopRecommendationsCommand implements MenuCommand {
         String numberOfRecommendation = promptString("Enter number of recommendation you want: ");
         out.println(Constants.VIEW_TOP_RECOMMENDATIONS + numberOfRecommendation);
         String recommendationsResponse = in.readLine();
-        System.out.println(recommendationsResponse);
+        printTopRecommendations(recommendationsResponse);
+    }
+
+    private void printTopRecommendations(String recommendationsResponse){
+        Gson gson = new Gson();
+        Type listType = new TypeToken<List<Menu>>() {}.getType();
+        List<Menu> recommendations = gson.fromJson(recommendationsResponse, listType);
+
+        StringBuilder formattedResponse = new StringBuilder("Top Recommendations:\n\n");
+        for (Menu recommendation : recommendations) {
+            formattedResponse.append("Name: ").append(recommendation.getName()).append("\n")
+                    .append("Menu ID: ").append(recommendation.getMenuId()).append("\n")
+                    .append("Price: Rupees ").append(recommendation.getPrice()).append("\n")
+                    .append("Availability: ").append(recommendation.getAvailabilityStatus()).append("\n")
+                    .append("Meal Type: ").append(recommendation.getMealType()).append("\n")
+                    .append("Score: ").append(recommendation.getScore()).append("\n\n");
+        }
+
+        System.out.println(formattedResponse);
     }
 
     private String promptString(String prompt) throws IOException {

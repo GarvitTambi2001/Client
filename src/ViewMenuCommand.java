@@ -20,6 +20,10 @@ class ViewMenuCommand implements MenuCommand {
     public void execute() throws IOException {
         out.println("VIEW_MENU_REQUEST");
         String viewResponse = in.readLine();
+        printAllMenu(viewResponse);
+    }
+
+    void printAllMenu(String viewResponse){
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String jsonPart = viewResponse.split(";")[1];
         System.out.println("Extracted JSON: " + jsonPart);
@@ -29,6 +33,6 @@ class ViewMenuCommand implements MenuCommand {
         }
         List<Menu> menuList = gson.fromJson(jsonPart, new TypeToken<List<Menu>>() {}.getType());
         String formattedJson = gson.toJson(menuList);
-        System.out.println(formattedJson);;
+        System.out.println(formattedJson);
     }
 }
