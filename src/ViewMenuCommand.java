@@ -26,7 +26,6 @@ class ViewMenuCommand implements MenuCommand {
     void printAllMenu(String viewResponse){
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String jsonPart = viewResponse.split(";")[1];
-        System.out.println("Extracted JSON: " + jsonPart);
         jsonPart = jsonPart.trim();
         if (jsonPart.startsWith("{") && jsonPart.endsWith("}")) {
             jsonPart = jsonPart.substring(1, jsonPart.length() - 1).trim();
