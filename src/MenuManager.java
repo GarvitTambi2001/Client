@@ -10,12 +10,16 @@ public class MenuManager {
 
     public static void addMenu(BufferedReader stdIn, PrintWriter out, BufferedReader in) throws IOException {
         try{
-            MenuDTO menu = new MenuDTO();
+            Menu menu = new Menu();
             menu.setName(promptString(stdIn, "Enter Name: "));
             menu.setPrice(promptBigDecimal(stdIn, "Enter Price: "));
             menu.setAvailabilityStatus("Yes");
             menu.setMealType(promptString(stdIn, "Enter Meal Type: "));
             menu.setScore(new BigDecimal(0));
+            menu.setDiet(promptString(stdIn, "Enter Diet (Vegetarian/Non-Vegetarian/Eggetarian): "));
+            menu.setSpice(promptString(stdIn, "Enter Spice level (High/Medium/Low): "));
+            menu.setCuisineType(promptString(stdIn, "Enter Preference (North Indian/South Indian/Other): "));
+            menu.setSweetTooth(promptString(stdIn, "Enter Sweet Tooth (Yes/No): "));
 
             Gson gson = new Gson();
             String json = gson.toJson(menu);
@@ -30,12 +34,16 @@ public class MenuManager {
 
     public static void updateMenu(BufferedReader stdIn, PrintWriter out, BufferedReader in) throws IOException {
         try {
-            MenuDTO menu = new MenuDTO();
+            Menu menu = new Menu();
             menu.setMenuId(promptBigDecimal(stdIn, "Enter Menu Id: "));
             menu.setName(promptString(stdIn, "Enter Name: "));
             menu.setPrice(promptBigDecimal(stdIn, "Enter Price: "));
             menu.setAvailabilityStatus(promptString(stdIn, "Enter Availability Status (Yes/No): "));
             menu.setMealType(promptString(stdIn, "Enter Meal Type: "));
+            menu.setDiet(promptString(stdIn, "Enter Diet (Vegetarian/Non-Vegetarian/Eggetarian): "));
+            menu.setSpice(promptString(stdIn, "Enter Spice level (High/Medium/Low): "));
+            menu.setCuisineType(promptString(stdIn, "Enter Preference (North Indian/South Indian/Other): "));
+            menu.setSweetTooth(promptString(stdIn, "Enter Sweet Tooth (Yes/No): "));
 
             Gson gson = new Gson();
             String json = gson.toJson(menu);
