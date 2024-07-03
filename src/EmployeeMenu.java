@@ -23,13 +23,13 @@ public class EmployeeMenu {
         Map<String, MenuCommand> commands = initializeCommands();
 
         String choice = "";
-        while (!choice.equals("5")) {
+        while (!choice.equals("6")) {
             printMenu();
             choice = stdIn.readLine();
 
             if (commands.containsKey(choice)) {
                 commands.get(choice).execute();
-            } else if ("5".equals(choice)) {
+            } else if ("6".equals(choice)) {
                 handleLogout();
             } else {
                 System.out.println("Invalid choice");
@@ -43,7 +43,8 @@ public class EmployeeMenu {
         System.out.println("2. Give Feedback to Chef");
         System.out.println("3. View Notifications");
         System.out.println("4. Give Feedback for Discarded Items");
-        System.out.println("5. Exit");
+        System.out.println("5. Update you Profile");
+        System.out.println("6. Exit");
         System.out.print("Enter your choice: ");
     }
 
@@ -53,15 +54,11 @@ public class EmployeeMenu {
         commands.put("2", new GiveFeedbackToChefCommand(stdIn, out, in,employeeId));
         commands.put("3", new ViewNotificationsCommand(out, in));
         commands.put("4", new DiscardMenuCommand(out, in, stdIn,"employee"));
+        commands.put("5", new UpdateProfileCommand(out, in, stdIn, employeeId));
         return commands;
     }
 
     private void handleLogout(){
         ClientCafeteria.sendUserSessionRequest(employeeId, "logout");
-    }
-
-    private String promptString(String prompt) throws IOException {
-        System.out.print(prompt);
-        return stdIn.readLine();
     }
 }

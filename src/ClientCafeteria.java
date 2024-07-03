@@ -67,7 +67,7 @@ public class ClientCafeteria {
     }
 
     public static void sendUserSessionRequest(String employeeId, String requestType) {
-        UserSessionDTO sessionDTO = new UserSessionDTO();
+        UserSession sessionDTO = new UserSession();
         sessionDTO.setEmployeeId(employeeId);
         sessionDTO.setRequestType(requestType);
         Gson gson = new Gson();

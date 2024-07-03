@@ -29,4 +29,6 @@ public class Constants {
     public static final String ERROR_PREFIX = "ERROR: ";
     public static final String ACTION_REMOVE = "1";
     public static final String ACTION_DETAILS = "2";
+    public static final String UPDATE_PROFILE_REQUEST = "UPDATE_PROFILE_REQUEST;";
+    public static final String UPDATE_PROFILE_RESPONSE = "UPDATE_PROFILE_RESPONSE;";
 }
