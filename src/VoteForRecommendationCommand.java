@@ -1,6 +1,8 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 class VoteForRecommendationCommand implements MenuCommand {
     private final BufferedReader stdIn;
@@ -32,11 +34,17 @@ class VoteForRecommendationCommand implements MenuCommand {
             System.out.println(parts[i]);
         }
         String menuIds = promptString("Enter the MenuIds to vote for (comma separated): ");
-        out.println(Constants.VOTE_RECOMMENDATION_REQUEST + menuIds + ";" + employeeId);
-
-        String voteResponse = in.readLine();
-        if (voteResponse != null && voteResponse.startsWith(Constants.VOTE_RECOMMENDATION_RESPONSE)) {
-            handleVoteResponse(voteResponse);
+        String regex = "^\\d+(,\\d+)*$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(menuIds);
+        if (matcher.matches()) {
+            out.println(Constants.VOTE_RECOMMENDATION_REQUEST + menuIds + ";" + employeeId);
+            String voteResponse = in.readLine();
+            if (voteResponse != null && voteResponse.startsWith(Constants.VOTE_RECOMMENDATION_RESPONSE)) {
+                handleVoteResponse(voteResponse);
+            }
+        } else {
+            System.out.println("Input is invalid.");
         }
     }
 
@@ -45,7 +53,7 @@ class VoteForRecommendationCommand implements MenuCommand {
         if (Constants.SUCCESS.equals(voteParts[1])) {
             System.out.println("Votes registered successfully.");
         } else {
-            System.out.println("Failed to submit feedback: " + voteParts[2]);
+            System.out.println("Failed to submit Votes: " + voteParts[2]);
         }
     }
 

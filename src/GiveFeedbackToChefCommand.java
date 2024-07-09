@@ -20,23 +20,29 @@ class GiveFeedbackToChefCommand implements MenuCommand {
 
     @Override
     public void execute() throws IOException {
-        int menuId = Integer.parseInt(promptString("Enter the MenuId to give feedback: "));
-        String comment = promptString("Enter your comment: ");
-        int rating = Integer.parseInt(promptString("Enter your rating: "));
+        try {
+            int menuId = Integer.parseInt(promptString("Enter the MenuId to give feedback: "));
+            String comment = promptString("Enter your comment: ");
+            int rating = Integer.parseInt(promptString("Enter your rating: "));
 
-        Feedback feedbackDTO = new Feedback();
-        feedbackDTO.setEmployeeId(employeeId);
-        feedbackDTO.setMenuId(menuId);
-        feedbackDTO.setComment(comment);
-        feedbackDTO.setRating(rating);
+            Feedback feedbackDTO = new Feedback();
+            feedbackDTO.setEmployeeId(employeeId);
+            feedbackDTO.setMenuId(menuId);
+            feedbackDTO.setComment(comment);
+            feedbackDTO.setRating(rating);
 
-        Gson gson = new Gson();
-        String jsonFeedback = gson.toJson(feedbackDTO);
-        out.println(Constants.GIVE_FEEDBACK_REQUEST + jsonFeedback);
+            Gson gson = new Gson();
+            String jsonFeedback = gson.toJson(feedbackDTO);
+            out.println(Constants.GIVE_FEEDBACK_REQUEST + jsonFeedback);
 
-        String feedbackResponse = in.readLine();
-        if (feedbackResponse != null && feedbackResponse.startsWith(Constants.GIVE_FEEDBACK_RESPONSE)) {
-            handleFeedbackResponse(feedbackResponse);
+            String feedbackResponse = in.readLine();
+            if (feedbackResponse != null && feedbackResponse.startsWith(Constants.GIVE_FEEDBACK_RESPONSE)) {
+                handleFeedbackResponse(feedbackResponse);
+            }
+        }catch(IllegalArgumentException e){
+            System.err.println("Input is Invalid. Please Check Your Data");
+        }catch (Exception e){
+            System.err.println("An Unknown exception. Please Contact IT Team");
         }
     }
 
