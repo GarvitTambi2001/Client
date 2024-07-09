@@ -44,14 +44,18 @@ public class DiscardManager {
     }
 
     private void handleEmployeeActions() throws IOException {
-        out.println(Constants.DISCARD_FEEDBACK_DETAILS_REQUEST_FOR_EMPLOYEE);
-        String response = in.readLine();
-        response = response.replaceAll("[{}]", "");
-        Map<Integer, String> menuIdWithQuestionMap = parseFeedbackDetailsResponse(response);
-        displayFeedbackQuestions(menuIdWithQuestionMap);
+        try {
+            out.println(Constants.DISCARD_FEEDBACK_DETAILS_REQUEST_FOR_EMPLOYEE);
+            String response = in.readLine();
+            response = response.replaceAll("[{}]", "");
+            Map<Integer, String> menuIdWithQuestionMap = parseFeedbackDetailsResponse(response);
+            displayFeedbackQuestions(menuIdWithQuestionMap);
 
-        String choice = stdIn.readLine();
-        handleEmployeeResponse(menuIdWithQuestionMap, choice);
+            String choice = stdIn.readLine();
+            handleEmployeeResponse(menuIdWithQuestionMap, choice);
+        }catch(Exception e){
+            System.err.println("Either there is no item or Contact IT Team");
+        }
     }
 
     private Map<Integer, String> parseFeedbackDetailsResponse(String response) {
