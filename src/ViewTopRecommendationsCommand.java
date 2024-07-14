@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 class ViewTopRecommendationsCommand implements MenuCommand {
     private final BufferedReader stdIn;
@@ -21,9 +23,16 @@ class ViewTopRecommendationsCommand implements MenuCommand {
     @Override
     public void execute() throws IOException {
         String numberOfRecommendation = promptString("Enter number of recommendation you want: ");
-        out.println(Constants.VIEW_TOP_RECOMMENDATIONS + numberOfRecommendation);
-        String recommendationsResponse = in.readLine();
-        printTopRecommendations(recommendationsResponse);
+        String regex = "^\\d+$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(numberOfRecommendation);
+        if (matcher.matches()) {
+            out.println(Constants.VIEW_TOP_RECOMMENDATIONS + numberOfRecommendation);
+            String recommendationsResponse = in.readLine();
+            printTopRecommendations(recommendationsResponse);
+        } else {
+            System.err.println("Input is invalid.");
+        }
     }
 
     private void printTopRecommendations(String recommendationsResponse){
