@@ -135,9 +135,13 @@ public class DiscardManager {
             } else if (Constants.ACTION_DETAILS.equals(action)) {
                 out.println(Constants.DISCARD_FEEDBACK_DETAILS_REQUEST_FOR_ADMIN_CHEF + selectedMenuItem);
                 System.out.println("Request sent to employees for detailed feedback.");
+            } else {
+                System.err.println("Input is not Valid");
             }
         } else if (actionResponse != null) {
             System.out.println(actionResponse.split(";")[2]);
+        } else {
+            System.err.println("We have got no response from server");
         }
     }
 
